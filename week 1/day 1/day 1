@@ -1,0 +1,41 @@
+# Initial data
+student_grades = {
+    "Alice": [88, 92, 100],
+    "Bob": [75, 78, 80],
+    "Charlie": [92, 90, 85],
+    "Dana": [83, 88, 92],
+    "Eli": [78, 80, 72]
+}
+
+# Dictionaries to store results
+student_averages = {}
+student_letter_grades = {}
+
+# Function to determine letter grade
+def get_letter_grade(avg):
+    if avg >= 90:
+        return "A"
+    elif avg >= 80:
+        return "B"
+    elif avg >= 70:
+        return "C"
+    elif avg >= 60:
+        return "D"
+    else:
+        return "F"
+
+# Calculate averages and letter grades
+for student, grades in student_grades.items():
+    average = sum(grades) / len(grades)
+    student_averages[student] = average
+    student_letter_grades[student] = get_letter_grade(average)
+
+# Calculate class average
+class_average = sum(student_averages.values()) / len(student_averages)
+
+# Print results
+print(f"Class average: {class_average:.2f}\n")
+for student in student_grades:
+    avg = student_averages[student]
+    letter = student_letter_grades[student]
+    print(f"{student}: Average = {avg:.2f}, Letter Grade = {letter}")
