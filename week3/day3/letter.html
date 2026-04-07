@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letters Only Input</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 300px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #333;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+    }
+
+    p {
+        color: #4CAF50;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Letters Only Input</h1>
+    <label for="lettersInput">Type here:</label>
+    <input type="text" id="lettersInput" placeholder="Only letters allowed">
+    <p>Numbers and symbols will be removed automatically.</p>
+</div>
+
+<script>
+    const input = document.getElementById('lettersInput');
+
+    input.addEventListener('input', () => {
+        // Remove all non-letter characters
+        input.value = input.value.replace(/[^a-zA-Z]/g, '');
+    });
+</script>
+
+</body>
+</html>

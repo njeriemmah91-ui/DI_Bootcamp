@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Challenge: Groceries & Reference</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #27ae60;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+
+        .result-box {
+            background: #f9f9f9;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            word-wrap: break-word;
+        }
+
+        .explanation {
+            background: #eef9f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .value-badge { background: #d4e6f1; color: #2980b9; }
+        .ref-badge { background: #d5f5e3; color: #16a085; }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <h1>Groceries Daily Challenge</h1>
+            <p>Exploring Pass by Value vs. Pass by Reference</p>
+        </header>
+
+        <main id="app">
+            </main>
+    </div>
+
+    <script>
+        // 1. DATA INITIALIZATION
+        let client = "John";
+
+        const groceries = {
+            fruits: ["pear", "apple", "banana"],
+            vegetables: ["tomatoes", "cucumber", "salad"],
+            totalPrice: "20$",
+            other: {
+                paid: true,
+                meansOfPayment: ["cash", "creditCard"]
+            }
+        };
+
+        const app = document.getElementById('app');
+
+        // Helper function to render sections to the DOM
+        const renderSection = (title, badgeClass, badgeText, content, explanation) => {
+            const section = document.createElement('section');
+            section.className = 'card';
+            section.innerHTML = `
+                <span class="badge ${badgeClass}">${badgeText}</span>
+                <h2>${title}</h2>
+                <div class="result-box">${content}</div>
+                <div class="explanation"><strong>Why?</strong> ${explanation}</div>
+            `;
+            app.appendChild(section);
+        };
+
+        // 2. DISPLAY GROCERIES FUNCTION
+        const displayGroceries = () => {
+            let fruitList = "";
+            groceries.fruits.forEach(fruit => {
+                fruitList += `• ${fruit}<br>`;
+                console.log(fruit); // Still logging to console as requested
+            });
+            
+            renderSection(
+                "Fruit List (forEach)", 
+                "ref-badge", "Object Access", 
+                fruitList, 
+                "We accessed the <code>fruits</code> array inside the <code>groceries</code> object and iterated through it using the <code>forEach</code> method."
+            );
+        };
+
+        // 3. CLONE GROCERIES FUNCTION
+        const cloneGroceries = () => {
+            // --- Part 1: Pass by Value ---
+            let user = client; 
+            client = "Betty"; 
+
+            renderSection(
+                "Testing: User vs Client", 
+                "value-badge", "Pass by Value", 
+                `Client changed to: <b>${client}</b><br>User variable remains: <b>${user}</b>`, 
+                "Strings are <b>Primitive types</b>. When you assigned <code>user = client</code>, JavaScript created a completely new copy of the value. Changing the original does not affect the copy."
+            );
+
+            // --- Part 2: Pass by Reference ---
+            let shopping = groceries; 
+            
+            // Modifications
+            groceries.totalPrice = "35$";
+            groceries.other.paid = false;
+
+            renderSection(
+                "Testing: Shopping vs Groceries", 
+                "ref-badge", "Pass by Reference", 
+                `Shopping Total: <b>${shopping.totalPrice}</b><br>Shopping Paid: <b>${shopping.other.paid}</b>`, 
+                "Objects are <b>Reference types</b>. The variable <code>shopping</code> doesn't hold a copy; it holds a 'pointer' to the same place in memory as <code>groceries</code>. Modifying one updates the other because they are the same object."
+            );
+        };
+
+        // EXECUTION
+        displayGroceries();
+        cloneGroceries();
+    </script>
+</body>
+</html>
