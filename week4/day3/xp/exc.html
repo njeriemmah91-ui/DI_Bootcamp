@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forms & JSON Exercise</title>
+</head>
+<body>
+
+  <h2>Exercise 1: GET Form</h2>
+  <form method="GET" action="">
+    <label for="getName">Name:</label><br>
+    <input type="text" id="getName" name="name" required><br><br>
+
+    <label for="getMessage">Message:</label><br>
+    <textarea id="getMessage" name="message" required></textarea><br><br>
+
+    <button type="submit">Send GET</button>
+  </form>
+
+  <hr>
+
+  <h2>Exercise 2: POST Form</h2>
+  <form method="POST" action="">
+    <label for="postName">Name:</label><br>
+    <input type="text" id="postName" name="name" required><br><br>
+
+    <label for="postMessage">Message:</label><br>
+    <textarea id="postMessage" name="message" required></textarea><br><br>
+
+    <button type="submit">Send POST</button>
+  </form>
+
+  <hr>
+
+  <h2>Exercise 3: JSON Mario</h2>
+  <button id="convertBtn">Convert to JSON</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    const marioGame = {
+      detail: "An amazing game!",
+      characters: {
+        mario: {
+          description: "Small and jumpy. Likes princesses.",
+          height: 10,
+          weight: 3,
+          speed: 12
+        },
+        bowser: {
+          description: "Big and green, Hates princesses.",
+          height: 16,
+          weight: 6,
+          speed: 4
+        },
+        princessPeach: {
+          description: "Beautiful princess.",
+          height: 12,
+          weight: 2,
+          speed: 2
+        }
+      }
+    };
+
+    const button = document.getElementById("convertBtn");
+    const output = document.getElementById("output");
+
+    button.addEventListener("click", function () {
+      debugger; // breakpoint for DevTools
+
+      const jsonData = JSON.stringify(marioGame, null, 2);
+      output.textContent = jsonData;
+
+      console.log(jsonData);
+    });
+  </script>
+
+</body>
+</html>
