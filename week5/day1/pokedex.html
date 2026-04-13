@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokedex App</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #cc0000;
+      color: white;
+      padding: 20px;
+    }
+
+    .pokedex {
+      width: 320px;
+      margin: auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px black;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
+
+    button {
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    #loading {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #error {
+      display: none;
+      margin-top: 10px;
+      color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Pokedex App</h1>
+
+  <div class="pokedex">
+
+    <div id="loading">Loading...</div>
+    <div id="error">Oh no! That Pokemon isn’t available...</div>
+
+    <img id="pokemonImage" src="" alt="pokemon">
+
+    <h2 id="name">Name</h2>
+    <p id="pokemonId"></p>
+    <p id="height"></p>
+    <p id="weight"></p>
+    <p id="type"></p>
+
+    <div>
+      <button id="prevBtn">Previous</button>
+      <button id="randomBtn">Random</button>
+      <button id="nextBtn">Next</button>
+    </div>
+
+  </div>
+
+<script>
+  // DOM elements
+  const pokemonImage = document.getElementById("pokemonImage");
+  const nameEl = document.getElementById("name");
+  const idEl = document.getElementById("pokemonId");
+  const heightEl = document.getElementById("height");
+  const weightEl = document.getElementById("weight");
+  const typeEl = document.getElementById("type");
+
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error");
+
+  const randomBtn = document.getElementById("randomBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const prevBtn = document.getElementById("prevBtn");
+
+  // keep track of current pokemon
+  let currentId = 1;
+
+  // fetch pokemon
+  async function getPokemon(id) {
+    try {
+      loading.style.display = "block";
+      errorBox.style.display = "none";
+
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const data = await response.json();
+
+      currentId = data.id;
+      displayPokemon(data);
+
+    } catch (error) {
+      console.log(error);
+      errorBox.style.display = "block";
+    } finally {
+      loading.style.display = "none";
+    }
+  }
+
+  // display data
+  function displayPokemon(pokemon) {
+    pokemonImage.src = pokemon.sprites.front_default;
+    nameEl.textContent = pokemon.name;
+    idEl.textContent = "ID: " + pokemon.id;
+    heightEl.textContent = "Height: " + pokemon.height;
+    weightEl.textContent = "Weight: " + pokemon.weight;
+
+    const types = pokemon.types.map(t => t.type.name).join(", ");
+    typeEl.textContent = "Type: " + types;
+  }
+
+  // buttons
+  randomBtn.addEventListener("click", () => {
+    const randomId = Math.floor(Math.random() * 1000) + 1;
+    getPokemon(randomId);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    getPokemon(currentId + 1);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (currentId > 1) {
+      getPokemon(currentId - 1);
+    }
+  });
+
+  // initial load
+  getPokemon(1);
+</script>
+
+</body>
+</html>
