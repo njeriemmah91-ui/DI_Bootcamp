@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercises XP Gold</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    select, input, button {
+        margin: 5px 0;
+        padding: 5px;
+    }
+
+    #root {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+    }
+
+    ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h2>Exercise 1: Select a kind of Music</h2>
+<select id="genres">
+  <option value="rock">Rock</option>
+  <option value="blues" selected>Blues</option>
+</select>
+
+<h2>Exercise 2: Delete colors</h2>
+<form>
+    <select id="colorSelect">
+        <option>Red</option>
+        <option>Green</option>
+        <option>White</option>
+        <option>Black</option>
+    </select>
+    <input type="button" value="Select and Remove" id="removeColorBtn">
+</form>
+
+<h2>Exercise 3: Create a shopping list</h2>
+<div id="root"></div>
+
+<script>
+    // ===================== Exercise 1 =====================
+    const genresSelect = document.getElementById('genres');
+
+    // Display current value
+    console.log("Selected genre:", genresSelect.value);
+
+    // Add new option "Classic" and select it by default
+    const newOption = document.createElement('option');
+    newOption.value = "classic";
+    newOption.textContent = "Classic";
+    newOption.selected = true;
+    genresSelect.appendChild(newOption);
+
+    console.log("New selected genre:", genresSelect.value);
+
+    // ===================== Exercise 2 =====================
+    const colorSelect = document.getElementById('colorSelect');
+    const removeColorBtn = document.getElementById('removeColorBtn');
+
+    function removecolor() {
+        const selectedIndex = colorSelect.selectedIndex;
+        if (selectedIndex >= 0) {
+            colorSelect.remove(selectedIndex);
+        }
+    }
+
+    removeColorBtn.addEventListener('click', removecolor);
+
+    // ===================== Exercise 3 =====================
+    const root = document.getElementById('root');
+    let shoppingList = [];
+
+    // Create form dynamically
+    const form = document.createElement('form');
+
+    const input = document.createElement('input');
+    input.type = "text";
+    input.placeholder = "Enter item";
+
+    const addBtn = document.createElement('button');
+    addBtn.type = "button";
+    addBtn.textContent = "AddItem";
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = "button";
+    clearBtn.textContent = "ClearAll";
+
+    form.appendChild(input);
+    form.appendChild(addBtn);
+    form.appendChild(clearBtn);
+    root.appendChild(form);
+
+    const ul = document.createElement('ul');
+    root.appendChild(ul);
+
+    function renderList() {
+        ul.innerHTML = '';
+        shoppingList.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+        });
+    }
+
+    function addItem() {
+        const value = input.value.trim();
+        if (value !== '') {
+            shoppingList.push(value);
+            renderList();
+            input.value = '';
+        }
+    }
+
+    function clearAll() {
+        shoppingList = [];
+        renderList();
+    }
+
+    addBtn.addEventListener('click', addItem);
+    clearBtn.addEventListener('click', clearAll);
+
+</script>
+</body>
+</html>

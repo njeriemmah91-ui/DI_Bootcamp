@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Solar System</title>
+<style>
+    /* General body styling */
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    /* Container for planets */
+    #solar-system {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    /* Planet styling */
+    .planet {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.9em;
+        position: relative;
+        transition: transform 0.2s;
+    }
+
+    .planet:hover {
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+
+    /* Moons */
+    .moons {
+        margin-top: 5px;
+        font-size: 0.7em;
+        color: #ccc;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        .planet {
+            width: 80px;
+            height: 80px;
+            font-size: 0.8em;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>🌌 Solar System</h1>
+<div id="solar-system"></div>
+
+<script>
+    const planets = [
+        { name: "Mercury", moons: [], color: "#b1b1b1" },
+        { name: "Venus", moons: [], color: "#e5c27e" },
+        { name: "Earth", moons: ["Moon"], color: "#2e86de" },
+        { name: "Mars", moons: ["Phobos", "Deimos"], color: "#c1440e" },
+        { name: "Jupiter", moons: ["Io", "Europa", "Ganymede", "Callisto"], color: "#f4d03f" },
+        { name: "Saturn", moons: ["Titan", "Enceladus"], color: "#f7dc6f" },
+        { name: "Uranus", moons: ["Miranda", "Titania"], color: "#76d7c4" },
+        { name: "Neptune", moons: ["Triton"], color: "#2e86de" },
+        { name: "Pluto", moons: ["Charon"], color: "#d98880" }
+    ];
+
+    const container = document.getElementById('solar-system');
+
+    planets.forEach(planet => {
+        const planetDiv = document.createElement('div');
+        planetDiv.classList.add('planet');
+        planetDiv.style.backgroundColor = planet.color;
+
+        const name = document.createElement('div');
+        name.textContent = planet.name;
+        planetDiv.appendChild(name);
+
+        if (planet.moons.length > 0) {
+            const moonsDiv = document.createElement('div');
+            moonsDiv.classList.add('moons');
+            moonsDiv.textContent = "Moons: " + planet.moons.join(", ");
+            planetDiv.appendChild(moonsDiv);
+        }
+
+        container.appendChild(planetDiv);
+    });
+</script>
+
+</body>
+</html>

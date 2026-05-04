@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercises XP: Animations</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    /* Timer Exercise */
+    #container {
+        background: yellow;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    #container p {
+        background: yellow;
+        color: red;
+        margin: 5px 0;
+        padding: 5px;
+    }
+
+    /* Move the Box Exercise */
+    #box-container {
+        width: 400px;
+        height: 400px;
+        position: relative;
+        background: yellow;
+        margin-top: 20px;
+    }
+
+    #animate {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        background-color: red;
+        top: 0;
+        left: 0;
+    }
+</style>
+</head>
+<body>
+
+<h2>Exercise 1: Timer</h2>
+<div id="timer-container">
+    <div id="container"></div>
+    <button id="clear">Clear Interval</button>
+</div>
+
+<h2>Exercise 2: Move the Box</h2>
+<p><button id="moveBtn">Click Me</button></p>
+<div id="box-container">
+    <div id="animate"></div>
+</div>
+
+<script>
+    // ===================== Exercise 1: Timer =====================
+    const container = document.getElementById('container');
+    const clearBtn = document.getElementById('clear');
+
+    // Part I: alert after 2 seconds
+    setTimeout(() => {
+        alert("Hello World");
+    }, 2000);
+
+    // Part II: add paragraph after 2 seconds
+    setTimeout(() => {
+        const p = document.createElement('p');
+        p.textContent = "Hello World";
+        container.appendChild(p);
+    }, 2000);
+
+    // Part III: add paragraph every 2 seconds
+    let intervalId = setInterval(() => {
+        const p = document.createElement('p');
+        p.textContent = "Hello World";
+        container.appendChild(p);
+
+        // Stop interval if 5 paragraphs exist
+        if (container.querySelectorAll('p').length >= 5) {
+            clearInterval(intervalId);
+        }
+    }, 2000);
+
+    // Stop interval on button click
+    clearBtn.addEventListener('click', () => {
+        clearInterval(intervalId);
+    });
+
+    // ===================== Exercise 2: Move the Box =====================
+    const animateBox = document.getElementById('animate');
+    const boxContainer = document.getElementById('box-container');
+    const moveBtn = document.getElementById('moveBtn');
+
+    moveBtn.addEventListener('click', () => {
+        let pos = 0;
+        const maxPos = boxContainer.offsetWidth - animateBox.offsetWidth;
+
+        const moveInterval = setInterval(() => {
+            if(pos >= maxPos) {
+                clearInterval(moveInterval);
+            } else {
+                pos += 1; // move 1px
+                animateBox.style.left = pos + "px";
+            }
+        }, 1); // every 1ms
+    });
+</script>
+
+</body>
+</html>

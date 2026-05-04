@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sunrise Times</title>
+</head>
+<body>
+
+  <form id="form">
+    <h3>City 1</h3>
+    <input id="lat1" placeholder="Latitude 1">
+    <input id="lng1" placeholder="Longitude 1">
+
+    <h3>City 2</h3>
+    <input id="lat2" placeholder="Latitude 2">
+    <input id="lng2" placeholder="Longitude 2">
+
+    <button type="submit">Get Sunrise Times</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById("form");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const lat1 = document.getElementById("lat1").value;
+      const lng1 = document.getElementById("lng1").value;
+      const lat2 = document.getElementById("lat2").value;
+      const lng2 = document.getElementById("lng2").value;
+
+      try {
+        const urls = [
+          `https://api.sunrise-sunset.org/json?lat=${lat1}&lng=${lng1}&formatted=0`,
+          `https://api.sunrise-sunset.org/json?lat=${lat2}&lng=${lng2}&formatted=0`
+        ];
+
+        const [city1, city2] = await Promise.all(
+          urls.map(async (url) => {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+              throw new Error("API error: " + response.status);
+            }
+
+            return await response.json();
+          })
+        );
+
+        const sunrise1 = city1.results.sunrise;
+        const sunrise2 = city2.results.sunrise;
+
+        result.innerHTML = `
+          <p>City 1 Sunrise: ${sunrise1}</p>
+          <p>City 2 Sunrise: ${sunrise2}</p>
+        `;
+
+      } catch (error) {
+        console.log("ooooooops", error);
+        result.innerHTML = "Something went wrong";
+      }
+    });
+  </script>
+
+</body>
+</html>

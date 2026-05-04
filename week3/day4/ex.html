@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Advanced Exercises</title>
+    <style>
+        :root {
+            --primary-bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --accent-blue: #2980b9;
+            --accent-green: #27ae60;
+            --border: #e1e4e8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Exercise 7 Navbar */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .output-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent-green);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+        }
+
+        .explanation {
+            font-size: 0.85rem;
+            color: #666;
+            background: #fffbe6;
+            padding: 0.75rem;
+            border-radius: 4px;
+        }
+
+        /* User Profile Style for Ex 7 */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 1rem; }
+            .container { margin: 1rem auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="main-nav">
+        <div style="font-weight: bold;">JS Academy</div>
+    </nav>
+
+    <div class="container" id="exercise-app">
+        </div>
+
+    <script>
+        const app = document.getElementById('exercise-app');
+
+        // UI helper to create exercise cards
+        const renderExercise = (title, result, explanation) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h2>${title}</h2>
+                <div class="output-box">${result}</div>
+                <div class="explanation"><strong>Concept:</strong> ${explanation}</div>
+            `;
+            app.appendChild(card);
+        };
+
+        // --- Exercise 1: Scope ---
+        (function() {
+            let a = 2;
+            let blockVal = "";
+            if (true) {
+                let a = 5;
+                blockVal = `Inside if-block: ${a}`;
+            }
+            renderExercise("Exercise 1: Scope", 
+                `${blockVal}\nOutside if-block: ${a}`, 
+                "Used 'let' for block scoping. Variables inside curly braces do not overwrite variables of the same name outside them.");
+        })();
+
+        // --- Exercise 2: Ternary Operator ---
+        const winBattle = () => true;
+        const experiencePoints = winBattle() ? 10 : 1;
+        renderExercise("Exercise 2: Ternary Operator", 
+            `Experience Points: ${experiencePoints}`, 
+            "Converted a function to an arrow function and used a ternary operator for a conditional assignment.");
+
+        // --- Exercise 3: Is it a string? ---
+        const isString = (val) => typeof val === 'string';
+        renderExercise("Exercise 3: Type Checking", 
+            `isString('hello'): ${isString('hello')}\nisString([1, 2]): ${isString([1, 2])}`, 
+            "Used an arrow function and the 'typeof' operator to validate data types.");
+
+        // --- Exercise 4: Sum ---
+        const sum = (a, b) => a + b;
+        renderExercise("Exercise 4: Arrow Function Sum", 
+            `Sum of 10 + 20: ${sum(10, 20)}`, 
+            "A one-line arrow function with implicit return.");
+
+        // --- Exercise 5: Kg and Grams ---
+        const toGrams = (kg) => kg * 1000;
+        renderExercise("Exercise 5: Weight Conversion", 
+            `5kg in grams: ${toGrams(5)}g`, 
+            "Arrow function conversion. Function declarations are hoisted, while expressions/arrows are not.");
+
+        // --- Exercise 6: Fortune Teller ---
+        (function(kids, partner, loc, job) {
+            const sentence = `You will be a ${job} in ${loc}, and married to ${partner} with ${kids} kids.`;
+            renderExercise("Exercise 6: Fortune Teller (IIFE)", sentence, "Self-invoking function used to display a string in the DOM.");
+        })(3, "Alex", "Paris", "Developer");
+
+        // --- Exercise 7: Welcome (Navbar) ---
+        (function(userName) {
+            const nav = document.getElementById('main-nav');
+            const div = document.createElement('div');
+            div.className = 'user-profile';
+            div.innerHTML = `<span>Welcome, ${userName}</span><img src="https://i.pravatar.cc/150?u=john">`;
+            nav.appendChild(div);
+        })("John");
+
+        // --- Exercise 8: Juice Bar ---
+        function makeJuice(size) {
+            const ingredients = [];
+            const addIngredients = (i1, i2, i3) => ingredients.push(i1, i2, i3);
+            
+            const displayJuice = () => {
+                const sentence = `The client wants a ${size} juice, containing ${ingredients.join(", ")}.`;
+                renderExercise("Exercise 8: Juice Bar (Closures)", sentence, "Nested functions allow 'displayJuice' to access the 'ingredients' array via a closure.");
+            };
+
+            addIngredients("apple", "banana", "cherry");
+            addIngredients("lemon", "mint", "honey");
+            displayJuice();
+        }
+        makeJuice("Large");
+
+    </script>
+</body>
+</html>

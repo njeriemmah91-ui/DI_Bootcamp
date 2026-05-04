@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Learning Login</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e40af, #3b82f6);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */
+.box {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 20px;
+  width: 320px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #22c55e;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+/* Title */
+h2 {
+  margin-bottom: 20px;
+}
+
+/* Message */
+#msg {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #fca5a5;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+  <h2>Smart Learning Login</h2>
+
+  <input id="email" type="email" placeholder="Enter Email">
+  <input id="password" type="password" placeholder="Enter Password">
+
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+
+</div>
+
+<script>
+let token = "";
+
+async function login(){
+  const res = await fetch("http://localhost:3000/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.token){
+    token = data.token;
+    msg.style.color = "lightgreen";
+    msg.innerText = "Login successful!";
+  } else {
+    msg.innerText = data.msg || "Login failed";
+  }
+}
+</script>
+
+</body>
+</html>

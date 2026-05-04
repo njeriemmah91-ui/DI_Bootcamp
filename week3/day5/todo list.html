@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <!-- Font Awesome for the X button -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .listTasks {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f2f2f2;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .task label {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .task.done label {
+            text-decoration: line-through;
+            color: red;
+        }
+
+        .deleteBtn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <form id="taskForm">
+        <input type="text" id="taskInput" placeholder="Add a new task">
+        <button type="submit">Add</button>
+    </form>
+
+    <div class="listTasks"></div>
+
+    <script>
+        const tasks = []; // Array of task objects
+        let taskId = 0;   // To assign unique ids
+
+        const taskForm = document.getElementById("taskForm");
+        const taskInput = document.getElementById("taskInput");
+        const listTasks = document.querySelector(".listTasks");
+
+        // Function to render a task in the DOM
+        function renderTask(task) {
+            const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task");
+            if (task.done) taskDiv.classList.add("done");
+            taskDiv.setAttribute("data-task-id", task.task_id);
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.done;
+            checkbox.addEventListener("change", () => doneTask(task.task_id));
+
+            const label = document.createElement("label");
+            label.textContent = task.text;
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("deleteBtn");
+            deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+            deleteBtn.addEventListener("click", () => deleteTask(task.task_id));
+
+            taskDiv.appendChild(checkbox);
+            taskDiv.appendChild(label);
+            taskDiv.appendChild(deleteBtn);
+
+            listTasks.appendChild(taskDiv);
+        }
+
+        // Add task function
+        function addTask(text) {
+            if (text.trim() === "") return;
+            const task = {
+                task_id: taskId++,
+                text: text,
+                done: false
+            };
+            tasks.push(task);
+            renderTask(task);
+        }
+
+        // Mark task as done
+        function doneTask(id) {
+            const task = tasks.find(t => t.task_id === id);
+            if (!task) return;
+            task.done = !task.done;
+
+            const taskDiv = listTasks.querySelector(`[data-task-id="${id}"]`);
+            if (task.done) {
+                taskDiv.classList.add("done");
+            } else {
+                taskDiv.classList.remove("done");
+            }
+        }
+
+        // Delete task
+        function deleteTask(id) {
+            const index = tasks.findIndex(t => t.task_id === id);
+            if (index === -1) return;
+            tasks.splice(index, 1);
+
+            const taskDiv = listTasks.querySelector(`[data-task-id="${id}"]`);
+            if (taskDiv) listTasks.removeChild(taskDiv);
+        }
+
+        // Handle form submission
+        taskForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            addTask(taskInput.value);
+            taskInput.value = ""; // Clear input
+        });
+    </script>
+</body>
+</html>

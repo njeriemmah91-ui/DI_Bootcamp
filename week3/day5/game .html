@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coloring Squares Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .palette {
+            margin-bottom: 20px;
+        }
+
+        .color {
+            width: 40px;
+            height: 40px;
+            border: none;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(16, 30px);
+            grid-template-rows: repeat(16, 30px);
+            gap: 2px;
+            justify-content: center;
+        }
+
+        .square {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Coloring Squares</h1>
+    
+    <div class="palette">
+        <button class="color" style="background-color: red;"></button>
+        <button class="color" style="background-color: blue;"></button>
+        <button class="color" style="background-color: green;"></button>
+        <button class="color" style="background-color: yellow;"></button>
+        <button class="color" style="background-color: black;"></button>
+        <button class="color" style="background-color: orange;"></button>
+    </div>
+
+    <div class="grid-container"></div>
+
+    <script>
+        const gridContainer = document.querySelector(".grid-container");
+        const colorButtons = document.querySelectorAll(".color");
+
+        let selectedColor = "black";
+        let mouseDown = false;
+
+        // Track mouse click and drag
+        document.body.onmousedown = () => (mouseDown = true);
+        document.body.onmouseup = () => (mouseDown = false);
+
+        // Create grid squares
+        for (let i = 0; i < 16 * 16; i++) {
+            const square = document.createElement("div");
+            square.classList.add("square");
+
+            // Change color on click or drag
+            square.addEventListener("mousedown", () => {
+                square.style.backgroundColor = selectedColor;
+            });
+
+            square.addEventListener("mouseover", () => {
+                if (mouseDown) {
+                    square.style.backgroundColor = selectedColor;
+                }
+            });
+
+            gridContainer.appendChild(square);
+        }
+
+        // Select color
+        colorButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                selectedColor = button.style.backgroundColor;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS Exercises XP - Complete</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    article {
+        border: 1px solid #ccc;
+        padding: 20px;
+        background-color: #fff;
+        margin-bottom: 20px;
+    }
+
+    article button {
+        margin-top: 10px;
+        padding: 5px 10px;
+    }
+
+    .fade {
+        transition: opacity 1s;
+        opacity: 0;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+    }
+
+    label, input {
+        display: block;
+        margin: 5px 0;
+    }
+
+    input[type="submit"] {
+        margin-top: 10px;
+        padding: 5px 10px;
+    }
+
+    ul.usersAnswer {
+        list-style-type: square;
+        padding-left: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    #sentence {
+        background-color: #fff;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    #MyForm {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+
+    #volume {
+        background-color: #eee;
+    }
+</style>
+</head>
+<body>
+
+<h2>Exercise 1: Change the article</h2>
+<article>
+    <h1>Some Facts</h1>
+    <h2>The Chocolate</h2>
+    <h3>History of the chocolate</h3>
+    <p>Chocolate is made from tropical Theobroma cacao tree seeds. Its earliest use dates back to the Olmec civilization in Mesoamerica.</p>
+    <p>After the European discovery of the Americas, chocolate became very popular in the wider world, and its demand exploded.</p>
+    <p>Chocolate has since become a popular food product that millions enjoy every day, thanks to its unique, rich, and sweet taste.</p>
+    <p>But what effect does eating chocolate have on our health?</p>
+    <button id="boldBtn">Make paragraphs bold</button>
+</article>
+
+<h2>Exercise 2: Work with forms</h2>
+<form id="userForm">
+  <label for="fname">First name:</label>
+  <input type="text" id="fname" name="firstname">
+  <label for="lname">Last name:</label>
+  <input type="text" id="lname" name="lastname">
+  <input type="submit" value="Submit">
+</form>
+<ul class="usersAnswer"></ul>
+
+<h2>Exercise 3: Transform the sentence</h2>
+<p id="sentence">
+    <strong>Hello</strong> I hope you are enjoying <strong>this</strong> class. At the
+    <strong>end</strong> you <strong>will</strong> be great Developers!
+    <strong>Enjoy</strong> the <strong>JavaScript </strong> lessons
+</p>
+
+<h2>Exercise 4: Volume of a sphere</h2>
+<p>Input radius value and get the volume of a sphere.</p>
+<form id="MyForm">
+    <label for="radius">Radius</label>
+    <input type="text" id="radius" required>
+    <label for="volume">Volume</label>
+    <input type="text" id="volume" readonly>
+    <input type="submit" value="Calculate">
+</form>
+
+<script>
+    // ===================== Exercise 1 =====================
+    const h1 = document.querySelector('article h1');
+    console.log(h1);
+
+    const article = document.querySelector('article');
+    const paragraphs = article.querySelectorAll('p');
+
+    // Remove last paragraph
+    paragraphs[paragraphs.length - 1].remove();
+
+    // H2 click to turn red
+    const h2 = article.querySelector('h2');
+    h2.addEventListener('click', () => {
+        h2.style.backgroundColor = 'red';
+    });
+
+    // H3 click to hide
+    const h3 = article.querySelector('h3');
+    h3.addEventListener('click', () => {
+        h3.style.display = 'none';
+    });
+
+    // Button to make all paragraphs bold
+    const boldBtn = document.getElementById('boldBtn');
+    boldBtn.addEventListener('click', () => {
+        article.querySelectorAll('p').forEach(p => p.style.fontWeight = 'bold');
+    });
+
+    // BONUS: H1 hover random font size
+    h1.addEventListener('mouseover', () => {
+        const randomSize = Math.floor(Math.random() * 101); // 0-100px
+        h1.style.fontSize = randomSize + 'px';
+    });
+
+    // BONUS: second paragraph fade out on hover
+    if (paragraphs[1]) {
+        paragraphs[1].addEventListener('mouseover', () => {
+            paragraphs[1].classList.add('fade');
+        });
+        paragraphs[1].addEventListener('mouseout', () => {
+            paragraphs[1].classList.remove('fade');
+        });
+    }
+
+    // ===================== Exercise 2 =====================
+    const form = document.getElementById('userForm');
+    console.log(form);
+
+    const fnameInput = document.getElementById('fname');
+    const lnameInput = document.getElementById('lname');
+    console.log(fnameInput, lnameInput);
+
+    const fnameByName = document.querySelector('[name="firstname"]');
+    const lnameByName = document.querySelector('[name="lastname"]');
+    console.log(fnameByName, lnameByName);
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // prevent page reload
+
+        const fnameValue = fnameInput.value.trim();
+        const lnameValue = lnameInput.value.trim();
+
+        if(fnameValue && lnameValue){
+            const ul = document.querySelector('.usersAnswer');
+
+            const li1 = document.createElement('li');
+            li1.textContent = fnameValue;
+            ul.appendChild(li1);
+
+            const li2 = document.createElement('li');
+            li2.textContent = lnameValue;
+            ul.appendChild(li2);
+
+            // Clear inputs
+            fnameInput.value = '';
+            lnameInput.value = '';
+        }
+    });
+
+    // ===================== Exercise 3 =====================
+    let allBoldItems = [];
+
+    function getBoldItems() {
+        const sentence = document.getElementById('sentence');
+        allBoldItems = sentence.querySelectorAll('strong');
+    }
+
+    function highlight() {
+        allBoldItems.forEach(item => item.style.color = 'blue');
+    }
+
+    function returnItemsToDefault() {
+        allBoldItems.forEach(item => item.style.color = 'black');
+    }
+
+    getBoldItems();
+
+    const sentencePara = document.getElementById('sentence');
+    sentencePara.addEventListener('mouseover', highlight);
+    sentencePara.addEventListener('mouseout', returnItemsToDefault);
+
+    // ===================== Exercise 4 =====================
+    const sphereForm = document.getElementById('MyForm');
+    sphereForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const radius = parseFloat(document.getElementById('radius').value);
+        if(!isNaN(radius)){
+            const volume = (4/3) * Math.PI * Math.pow(radius, 3);
+            document.getElementById('volume').value = volume.toFixed(2);
+        } else {
+            alert('Please enter a valid number for radius.');
+        }
+    });
+</script>
+
+</body>
+</html>

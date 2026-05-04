@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Quote Generator</title>
+</head>
+<body>
+
+  <h2>Random Quote Generator</h2>
+
+  <!-- Display Section -->
+  <section id="quoteSection"></section>
+
+  <button id="generateBtn">Generate Quote</button>
+
+  <hr>
+
+  <!-- Add Quote Form -->
+  <h3>Add New Quote</h3>
+  <form id="addForm">
+    <input type="text" id="newQuote" placeholder="Quote" required>
+    <input type="text" id="newAuthor" placeholder="Author" required>
+    <button type="submit">Add Quote</button>
+  </form>
+
+  <hr>
+
+  <!-- Info Buttons -->
+  <button id="charWithSpace">Characters (with spaces)</button>
+  <button id="charNoSpace">Characters (no spaces)</button>
+  <button id="wordCount">Word Count</button>
+  <button id="likeBtn">Like ❤️</button>
+
+  <p id="info"></p>
+
+  <hr>
+
+  <!-- Filter Form -->
+  <h3>Filter by Author</h3>
+  <form id="filterForm">
+    <input type="text" id="authorFilter" placeholder="Author name">
+    <button type="submit">Filter</button>
+  </form>
+
+  <button id="prevBtn">Previous</button>
+  <button id="nextBtn">Next</button>
+
+  <script>
+    // Quotes Array
+    const quotes = [
+      { id: 0, author: "Albert Einstein", quote: "Life is like riding a bicycle.", likes: 0 },
+      { id: 1, author: "Nelson Mandela", quote: "It always seems impossible until it is done.", likes: 0 },
+      { id: 2, author: "Confucius", quote: "It does not matter how slowly you go.", likes: 0 }
+    ];
+
+    let lastIndex = -1;
+    let currentQuote = null;
+
+    const section = document.getElementById("quoteSection");
+    const info = document.getElementById("info");
+
+    // Generate Random Quote (no repeat)
+    document.getElementById("generateBtn").addEventListener("click", () => {
+      let randomIndex;
+
+      do {
+        randomIndex = Math.floor(Math.random() * quotes.length);
+      } while (randomIndex === lastIndex);
+
+      lastIndex = randomIndex;
+      currentQuote = quotes[randomIndex];
+
+      displayQuote(currentQuote);
+    });
+
+    function displayQuote(q) {
+      section.innerHTML = `
+        <p>"${q.quote}"</p>
+        <p>- ${q.author}</p>
+        <p>Likes: ${q.likes}</p>
+      `;
+    }
+
+    // Add New Quote
+    document.getElementById("addForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const quoteText = document.getElementById("newQuote").value;
+      const authorText = document.getElementById("newAuthor").value;
+
+      const newQuote = {
+        id: quotes.length,
+        author: authorText,
+        quote: quoteText,
+        likes: 0
+      };
+
+      quotes.push(newQuote);
+
+      e.target.reset();
+    });
+
+    // Character count (with spaces)
+    document.getElementById("charWithSpace").onclick = () => {
+      if (currentQuote)
+        info.textContent = currentQuote.quote.length;
+    };
+
+    // Character count (no spaces)
+    document.getElementById("charNoSpace").onclick = () => {
+      if (currentQuote)
+        info.textContent = currentQuote.quote.replace(/\s/g, "").length;
+    };
+
+    // Word count
+    document.getElementById("wordCount").onclick = () => {
+      if (currentQuote)
+        info.textContent = currentQuote.quote.split(" ").length;
+    };
+
+    // Like button
+    document.getElementById("likeBtn").onclick = () => {
+      if (currentQuote) {
+        currentQuote.likes++;
+        displayQuote(currentQuote);
+      }
+    };
+
+    // Filter system
+    let filteredQuotes = [];
+    let filterIndex = 0;
+
+    document.getElementById("filterForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const author = document.getElementById("authorFilter").value.toLowerCase();
+
+      filteredQuotes = quotes.filter(q =>
+        q.author.toLowerCase().includes(author)
+      );
+
+      filterIndex = 0;
+
+      if (filteredQuotes.length > 0) {
+        currentQuote = filteredQuotes[0];
+        displayQuote(currentQuote);
+      } else {
+        section.textContent = "No quotes found.";
+      }
+    });
+
+    // Next button
+    document.getElementById("nextBtn").onclick = () => {
+      if (filteredQuotes.length > 0) {
+        filterIndex = (filterIndex + 1) % filteredQuotes.length;
+        currentQuote = filteredQuotes[filterIndex];
+        displayQuote(currentQuote);
+      }
+    };
+
+    // Previous button
+    document.getElementById("prevBtn").onclick = () => {
+      if (filteredQuotes.length > 0) {
+        filterIndex = (filterIndex - 1 + filteredQuotes.length) % filteredQuotes.length;
+        currentQuote = filteredQuotes[filterIndex];
+        displayQuote(currentQuote);
+      }
+    };
+  </script>
+
+</body>
+</html>

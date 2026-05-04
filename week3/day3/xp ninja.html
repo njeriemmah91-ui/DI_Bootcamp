@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XP Exercises: Tip, Email, Geolocation</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    input, select, button {
+        margin: 5px 0;
+        padding: 5px;
+    }
+
+    #totalTip {
+        display: none;
+        margin-top: 10px;
+        font-weight: bold;
+        color: green;
+    }
+
+    #geoOutput {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+    }
+
+    .error {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<h2>Exercise 1: Tip Calculator</h2>
+<p>Enter your bill details:</p>
+<label>Bill Amount: <input type="number" id="billAmt" placeholder="Enter bill amount"></label><br>
+<label>Service Quality:
+    <select id="serviceQual">
+        <option value="0">--Select--</option>
+        <option value="0.3">30% - Excellent</option>
+        <option value="0.2">20% - Good</option>
+        <option value="0.15">15% - Average</option>
+        <option value="0.1">10% - Poor</option>
+    </select>
+</label><br>
+<label>Number of People: <input type="number" id="numOfPeople" placeholder="Number of people"></label><br>
+<button id="calculate">Calculate Tip</button>
+
+<div id="totalTip">
+    Tip Each: $<span id="tip"></span> <span id="each">each</span>
+</div>
+
+<h2>Exercise 2: Email Validation</h2>
+<form id="emailForm">
+    <label>Email: <input type="email" id="emailInput" placeholder="Enter your email"></label><br>
+    <button type="submit">Submit</button>
+</form>
+<p id="emailError" class="error"></p>
+
+<h2>Exercise 3: Geolocation</h2>
+<button id="geoBtn">Get My Coordinates</button>
+<div id="geoOutput"></div>
+
+<script>
+    // ===================== Exercise 1: Tip Calculator =====================
+    const billAmt = document.getElementById('billAmt');
+    const serviceQual = document.getElementById('serviceQual');
+    const numOfPeople = document.getElementById('numOfPeople');
+    const totalTip = document.getElementById('totalTip');
+    const tip = document.getElementById('tip');
+    const each = document.getElementById('each');
+    const calculate = document.getElementById('calculate');
+
+    function calculateTip() {
+        const bill = parseFloat(billAmt.value);
+        const service = parseFloat(serviceQual.value);
+        let people = parseInt(numOfPeople.value);
+
+        if (!bill || service === 0) {
+            alert("Please enter valid bill amount and service quality.");
+            return;
+        }
+
+        if (!people || people < 1) {
+            people = 1;
+            each.style.display = "none";
+        } else {
+            each.style.display = "inline";
+        }
+
+        const total = (bill * service) / people;
+        tip.textContent = total.toFixed(2);
+        totalTip.style.display = "block";
+    }
+
+    calculate.onclick = calculateTip;
+
+    // ===================== Exercise 2: Email Validation =====================
+    const emailForm = document.getElementById('emailForm');
+    const emailInput = document.getElementById('emailInput');
+    const emailError = document.getElementById('emailError');
+
+    function validateEmail(email) {
+        // Simple regex for basic validation
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    emailForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+
+        if (validateEmail(email)) {
+            emailError.textContent = "Valid email!";
+            emailError.style.color = "green";
+        } else {
+            emailError.textContent = "Invalid email address!";
+            emailError.style.color = "red";
+        }
+    });
+
+    // ===================== Exercise 3: Geolocation =====================
+    const geoBtn = document.getElementById('geoBtn');
+    const geoOutput = document.getElementById('geoOutput');
+
+    geoBtn.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    geoOutput.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                },
+                (error) => {
+                    geoOutput.textContent = "Error getting location: " + error.message;
+                }
+            );
+        } else {
+            geoOutput.textContent = "Geolocation is not supported by your browser.";
+        }
+    });
+</script>
+
+</body>
+</html>
