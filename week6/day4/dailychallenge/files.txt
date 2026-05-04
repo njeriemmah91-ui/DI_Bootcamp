@@ -1,0 +1,2 @@
+Hello from the file system!
+This is Node.js file reading.

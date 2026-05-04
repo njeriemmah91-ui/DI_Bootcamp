@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emoji Game</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f4f4f9;
+      margin-top: 50px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #emoji {
+      font-size: 90px;
+      margin: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #score {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    .next {
+      background: #2196F3;
+    }
+
+    .next:hover {
+      background: #1976D2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎮 Emoji Guessing Game</h1>
+
+  <div id="emoji">Loading...</div>
+
+  <div id="options"></div>
+
+  <p id="result"></p>
+  <p id="score"></p>
+
+  <button class="next" onclick="loadGame()">Next Emoji</button>
+
+  <script>
+    let currentAnswer = "";
+
+    async function loadGame() {
+      const res = await fetch('/game');
+      const data = await res.json();
+
+      currentAnswer = data.answer;
+
+      document.getElementById('emoji').innerText = data.emoji;
+      document.getElementById('score').innerText = "Score: " + data.score;
+
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = "";
+
+      data.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+
+        btn.onclick = async () => {
+          const res = await fetch('/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              guess: opt,
+              answer: currentAnswer
+            })
+          });
+
+          const result = await res.json();
+          document.getElementById('result').innerText = result.result;
+          document.getElementById('score').innerText = "Score: " + result.score;
+        };
+
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    loadGame();
+  </script>
+
+</body>
+</html>
