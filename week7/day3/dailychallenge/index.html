@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Combined API</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container { max-width: 700px; width: 100%; }
+    h1 { text-align: center; color: #f1f5f9; font-size: 28px; margin-bottom: 8px; }
+    .sub { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 36px; }
+
+    .section { margin-bottom: 28px; }
+    .section h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #7c3aed;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .card {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 20px;
+      text-decoration: none;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: background 0.2s, transform 0.15s;
+      border: 1px solid #334155;
+    }
+    .card:hover { background: #263548; transform: translateY(-2px); }
+    .card .icon { font-size: 28px; }
+    .card .info .title { font-weight: 600; font-size: 15px; }
+    .card .info .desc { font-size: 12px; color: #64748b; margin-top: 3px; }
+
+    .routes { background: #0f172a; border-radius: 14px; padding: 20px; }
+    .route {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1e293b;
+      font-size: 13px;
+    }
+    .route:last-child { border-bottom: none; }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      min-width: 52px;
+      text-align: center;
+    }
+    .get    { background: rgba(34,197,94,0.15);  color: #4ade80; }
+    .post   { background: rgba(124,58,237,0.2);  color: #a78bfa; }
+    .put    { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .delete { background: rgba(239,68,68,0.15);  color: #f87171; }
+    .route .path { color: #cbd5e1; font-family: monospace; }
+    .route .note { color: #475569; margin-left: auto; font-size: 11px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Combined API</h1>
+  <p class="sub">Task Management + User Management running on port 3000</p>
+
+  <div class="section">
+    <h2>Pages</h2>
+    <div class="cards">
+      <a class="card" href="/register.html">
+        <span class="icon">👤</span>
+        <div class="info">
+          <div class="title">Register</div>
+          <div class="desc">Create a new account</div>
+        </div>
+      </a>
+      <a class="card" href="/login.html">
+        <span class="icon">🔐</span>
+        <div class="info">
+          <div class="title">Login</div>
+          <div class="desc">Sign into your account</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>All API Routes</h2>
+    <div class="routes">
+      <div class="route"><span class="badge post">POST</span><span class="path">/register</span><span class="note">Create account</span></div>
+      <div class="route"><span class="badge post">POST</span><span class="path">/login</span><span class="note">Authenticate</span></div>
+      <div class="route"><span class="badge get">GET</span><span class="path">/users</span><span class="note">List all users</span></div>
+      <div class="route"><span class="badge get">GET</span><span class="path">/users/:id</span><span class="note">Get one user</span></div>
+      <div class="route"><span class="badge put">PUT</span><span class="path">/users/:id</span><span class="note">Update user</span></div>
+      <div class="route"><span class="badge get">GET</span><span class="path">/tasks</span><span class="note">List all tasks</span></div>
+      <div class="route"><span class="badge get">GET</span><span class="path">/tasks/:id</span><span class="note">Get one task</span></div>
+      <div class="route"><span class="badge post">POST</span><span class="path">/tasks</span><span class="note">Create task</span></div>
+      <div class="route"><span class="badge put">PUT</span><span class="path">/tasks/:id</span><span class="note">Update task</span></div>
+      <div class="route"><span class="badge delete">DELETE</span><span class="path">/tasks/:id</span><span class="note">Delete task</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
