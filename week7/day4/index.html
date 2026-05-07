@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Exercises</title>
+
+  <!-- React + ReactDOM via CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel for in-browser JSX transpilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1.page-title {
+      border-bottom: 2px solid #282c34;
+      padding-bottom: 8px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    section h2 {
+      color: #333;
+    }
+
+    /* Exercise 3 Part III */
+    .para {
+      background-color: #282c34;
+      color: white;
+      padding: 40px;
+      font-family: Arial;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    /* ── Exercise 2 — UserFavoriteAnimals component ── */
+    class UserFavoriteAnimals extends React.Component {
+      render() {
+        const { favAnimals } = this.props;
+        return (
+          <ul>
+            {favAnimals.map((animal, index) => (
+              <li key={index}>{animal}</li>
+            ))}
+          </ul>
+        );
+      }
+    }
+
+    /* ── Exercise 3 — Exercise component ── */
+    const style_header = {
+      color: "white",
+      backgroundColor: "DodgerBlue",
+      padding: "10px",
+      fontFamily: "Arial",
+    };
+
+    class Exercise extends React.Component {
+      render() {
+        return (
+          <div>
+            <h1 style={style_header}>My Heading</h1>
+            <p className="para">
+              This is a styled paragraph using an external CSS file.
+            </p>
+            <a href="https://reactjs.org" target="_blank" rel="noreferrer">
+              Visit React
+            </a>
+            <form style={{ marginTop: 16 }}>
+              <label htmlFor="name">Name: </label>
+              <input id="name" type="text" placeholder="Enter your name" />
+              <button type="submit" style={{ marginLeft: 8 }}>Submit</button>
+            </form>
+            <div style={{ marginTop: 16 }}>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Camponotus_flavomarginatus_ant.jpg"
+                alt="An ant"
+                width={200}
+              />
+            </div>
+            <ul style={{ marginTop: 16 }}>
+              <li>Item One</li>
+              <li>Item Two</li>
+              <li>Item Three</li>
+            </ul>
+          </div>
+        );
+      }
+    }
+
+    /* ── App.js ── */
+
+    // Exercise 1
+    const myelement = <h1>I Love JSX!</h1>;
+    const sum = 5 + 5;
+
+    // Exercise 2
+    const user = {
+      firstName: "Bob",
+      lastName: "Dylan",
+      favAnimals: ["Horse", "Turtle", "Elephant", "Monkey"],
+    };
+
+    function App() {
+      return (
+        <div>
+          <h1 className="page-title">React Exercises</h1>
+
+          {/* Exercise 1: JSX */}
+          <section>
+            <h2>Exercise 1: JSX</h2>
+            <p>Hello World!</p>
+            {myelement}
+            <p>React is {sum} times better with JSX</p>
+          </section>
+
+          {/* Exercise 2: Object */}
+          <section>
+            <h2>Exercise 2: Object</h2>
+            <h3>{user.firstName}</h3>
+            <h3>{user.lastName}</h3>
+            <UserFavoriteAnimals favAnimals={user.favAnimals} />
+          </section>
+
+          {/* Exercise 3: HTML Tags in React */}
+          <section>
+            <h2>Exercise 3: HTML Tags in React</h2>
+            <Exercise />
+          </section>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+
+  </script>
+</body>
+</html>
