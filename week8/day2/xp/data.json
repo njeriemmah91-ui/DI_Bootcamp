@@ -1,0 +1,59 @@
+{
+  "posts": [
+    {
+      "title": "Hello World",
+      "content": "This is my first post"
+    },
+    {
+      "title": "React Learning",
+      "content": "React is very powerful"
+    }
+  ],
+
+  "SocialMedias": [
+    "Facebook",
+    "Twitter",
+    "Instagram"
+  ],
+
+  "Skills": [
+    {
+      "Area": "Frontend",
+      "SkillSet": [
+        {
+          "Name": "HTML"
+        },
+        {
+          "Name": "CSS"
+        },
+        {
+          "Name": "React"
+        }
+      ]
+    },
+    {
+      "Area": "Backend",
+      "SkillSet": [
+        {
+          "Name": "Node.js"
+        },
+        {
+          "Name": "Express"
+        }
+      ]
+    }
+  ],
+
+  "Experiences": [
+    {
+      "company": "Google",
+      "role": "Frontend Developer",
+      "years": "2 Years"
+    },
+    {
+      "company": "Microsoft",
+      "role": "Backend Developer",
+      "years": "3 Years"
+    }
+  ]
+}
