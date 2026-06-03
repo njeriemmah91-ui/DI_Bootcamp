@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f7fb;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+a,
+button,
+input {
+  font-size: 14px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.datePicker {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.datePicker input[type="date"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+}
+
+.panel {
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+}
+
+.taskForm {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.taskForm input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+}
+
+.taskForm button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: #fff;
+}
+
+.taskForm button:disabled {
+  opacity: 0.6;
+}
+
+.taskItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.taskItem .left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.taskItem .text {
+  font-weight: 600;
+}
+
+.taskItem input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+}
+
+.btnRow {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+}
+
+.btn.danger {
+  border-color: #ffb3b3;
+  color: #b00020;
+}
+
+.btn.primary {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.empty {
+  color: #666;
+  font-style: italic;
+}
+
