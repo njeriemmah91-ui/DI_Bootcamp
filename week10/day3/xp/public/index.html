@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Authentication Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="navbar">
+      <h1>🔐 JWT Auth</h1>
+      <div id="navButtons">
+        <button class="nav-btn" onclick="showSection('home')">Home</button>
+        <button class="nav-btn" onclick="showSection('register')">Register</button>
+        <button class="nav-btn" onclick="showSection('login')">Login</button>
+        <button class="nav-btn" id="profileBtn" style="display:none" onclick="showSection('profile')">Profile</button>
+        <button class="nav-btn" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Home Section -->
+    <section id="home" class="section active">
+      <div class="card">
+        <h2>Welcome to JWT Authentication Demo</h2>
+        <p>This is a complete implementation of JWT authentication using Node.js and Express.</p>
+        <h3>Features:</h3>
+        <ul>
+          <li>✅ User Registration with Validation</li>
+          <li>✅ User Login with Password Hashing</li>
+          <li>✅ JWT Token Generation and Verification</li>
+          <li>✅ Refresh Token Implementation</li>
+          <li>✅ Secure HTTP-only Cookies</li>
+          <li>✅ Protected Routes</li>
+          <li>✅ Token Revocation on Logout</li>
+        </ul>
+        <h3>How it works:</h3>
+        <ol>
+          <li>Register a new account or login with existing credentials</li>
+          <li>Your access token is stored securely in an HTTP-only cookie</li>
+          <li>Access your profile to see authenticated endpoints</li>
+          <li>Your token automatically refreshes when needed</li>
+          <li>Logout to revoke your refresh token</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="section">
+      <div class="card">
+        <h2>Register</h2>
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label for="regUsername">Username:</label>
+            <input type="text" id="regUsername" placeholder="Enter username (min 3 chars)" required>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" placeholder="Enter email" required>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" placeholder="Enter password (min 6 chars)" required>
+          </div>
+          <button type="submit" class="btn-primary">Register</button>
+        </form>
+        <div id="registerMessage" class="message"></div>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="section">
+      <div class="card">
+        <h2>Login</h2>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername" placeholder="Enter username" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" required>
+          </div>
+          <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <div id="loginMessage" class="message"></div>
+      </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile" class="section">
+      <div class="card">
+        <h2>User Profile</h2>
+        <div id="profileContent">
+          <p>Loading...</p>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-secondary" onclick="updateProfile()">Edit Email</button>
+          <button class="btn-secondary" onclick="verifyToken()">Verify Token</button>
+        </div>
+        <div id="profileMessage" class="message"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Show/Hide Sections
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    // Check if user is logged in
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('/api/auth/verify-token', {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          document.getElementById('profileBtn').style.display = 'inline-block';
+          document.getElementById('logoutBtn').style.display = 'inline-block';
+          showUserWelcome();
+        } else {
+          document.getElementById('profileBtn').style.display = 'none';
+          document.getElementById('logoutBtn').style.display = 'none';
+        }
+      } catch (error) {
+        console.log('User not authenticated');
+      }
+    }
+
+    // Show welcome message
+    async function showUserWelcome() {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        if (response.ok) {
+          console.log(`Welcome, ${data.username}!`);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    }
+
+    // Handle Registration
+    async function handleRegister(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+        const messageEl = document.getElementById('registerMessage');
+
+        if (response.ok) {
+          messageEl.className = 'message success';
+          messageEl.textContent = '✅ Registration successful! Logged in automatically.';
+          document.getElementById('regUsername').value = '';
+          document.getElementById('regEmail').value = '';
+          document.getElementById('regPassword').value = '';
+          
+          setTimeout(() => {
+            checkLoginStatus();
+            showSection('profile');
+          }, 1500);
+        } else {
+          messageEl.className = 'message error';
+          messageEl.textContent = '❌ ' + data.message;
+        }
+      } catch (error) {
+        document.getElementById('registerMessage').className = 'message error';
+        document.getElementById('registerMessage').textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    // Handle Login
+    async function handleLogin(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        const messageEl = document.getElementById('loginMessage');
+
+        if (response.ok) {
+          messageEl.className = 'message success';
+          messageEl.textContent = '✅ Login successful!';
+          document.getElementById('loginUsername').value = '';
+          document.getElementById('loginPassword').value = '';
+          
+          setTimeout(() => {
+            checkLoginStatus();
+            showSection('profile');
+          }, 1500);
+        } else {
+          messageEl.className = 'message error';
+          messageEl.textContent = '❌ ' + data.message;
+        }
+      } catch (error) {
+        document.getElementById('loginMessage').className = 'message error';
+        document.getElementById('loginMessage').textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    // Fetch Profile
+    async function fetchProfile() {
+      try {
+        const response = await fetch('/api/auth/profile', {
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const profileContent = document.getElementById('profileContent');
+          profileContent.innerHTML = `
+            <div class="profile-info">
+              <p><strong>User ID:</strong> ${data.user.id}</p>
+              <p><strong>Username:</strong> ${data.user.username}</p>
+              <p><strong>Email:</strong> ${data.user.email}</p>
+              <p><strong>Created:</strong> ${new Date(data.user.createdAt).toLocaleDateString()}</p>
+            </div>
+          `;
+        } else {
+          document.getElementById('profileContent').innerHTML = '<p class="error">Error loading profile</p>';
+        }
+      } catch (error) {
+        document.getElementById('profileContent').innerHTML = '<p class="error">Error: ' + error.message + '</p>';
+      }
+    }
+
+    // Update Email
+    async function updateProfile() {
+      const newEmail = prompt('Enter new email:');
+      if (!newEmail) return;
+
+      try {
+        const response = await fetch('/api/auth/update-profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ email: newEmail })
+        });
+
+        const data = await response.json();
+        const messageEl = document.getElementById('profileMessage');
+
+        if (response.ok) {
+          messageEl.className = 'message success';
+          messageEl.textContent = '✅ Email updated successfully!';
+          fetchProfile();
+        } else {
+          messageEl.className = 'message error';
+          messageEl.textContent = '❌ ' + data.message;
+        }
+      } catch (error) {
+        document.getElementById('profileMessage').className = 'message error';
+        document.getElementById('profileMessage').textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    // Verify Token
+    async function verifyToken() {
+      try {
+        const response = await fetch('/api/auth/verify-token', {
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+        const messageEl = document.getElementById('profileMessage');
+
+        if (response.ok) {
+          messageEl.className = 'message success';
+          messageEl.textContent = `✅ Token valid! User: ${data.username}`;
+        } else {
+          messageEl.className = 'message error';
+          messageEl.textContent = '❌ ' + data.message;
+        }
+      } catch (error) {
+        document.getElementById('profileMessage').className = 'message error';
+        document.getElementById('profileMessage').textContent = '❌ Error: ' + error.message;
+      }
+    }
+
+    // Logout
+    async function logout() {
+      try {
+        const response = await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          alert('✅ Logout successful!');
+          document.getElementById('profileBtn').style.display = 'none';
+          document.getElementById('logoutBtn').style.display = 'none';
+          showSection('home');
+          checkLoginStatus();
+        }
+      } catch (error) {
+        alert('❌ Error during logout: ' + error.message);
+      }
+    }
+
+    // Profile section click handler
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLoginStatus();
+      const profileSection = document.getElementById('profile');
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeValue?.includes('active')) {
+            fetchProfile();
+          }
+        });
+      });
+
+      observer.observe(profileSection, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Fetch profile when profile section becomes active
+    const originalShowSection = window.showSection;
+    window.showSection = function(sectionId) {
+      if (sectionId === 'profile') {
+        fetchProfile();
+      }
+      originalShowSection(sectionId);
+    };
+  </script>
+</body>
+</html>
